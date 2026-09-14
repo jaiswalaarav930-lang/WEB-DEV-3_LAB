@@ -1,0 +1,3 @@
+node_modules/
+.git-lab2-backup/
+npm-debug.log*
