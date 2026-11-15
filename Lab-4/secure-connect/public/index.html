@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lab 4 - Socket.IO Chat</title>
+</head>
+<body>
+  <h3>Real-Time Chat (Socket.IO)</h3>
+  <input id="sender" placeholder="Your name (e.g. Aditi)" />
+  <input id="room" value="general" placeholder="Room" />
+  <button onclick="join()">Join Room</button>
+  <br /><br />
+  <input id="msg" placeholder="Type message..." />
+  <button onclick="send()">Send</button>
+  <ul id="messages"></ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    function join() {
+      const room = document.getElementById('room').value || 'general';
+      socket.emit('joinRoom', room);
+    }
+
+    function send() {
+      const sender = document.getElementById('sender').value || 'User';
+      const room = document.getElementById('room').value || 'general';
+      const message = document.getElementById('msg').value;
+      if (!message) return;
+      socket.emit('chatMessage', { room, sender, message });
+      document.getElementById('msg').value = '';
+    }
+
+    socket.on('chatMessage', ({ room, sender, message }) => {
+      const li = document.createElement('li');
+      li.textContent = `[${room}] ${sender}: ${message}`;
+      document.getElementById('messages').appendChild(li);
+    });
+  </script>
+</body>
+</html>
